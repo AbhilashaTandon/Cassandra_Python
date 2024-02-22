@@ -56,7 +56,7 @@ class Operator(Token):
             case other: return 0
         return 0
 
-    def left_assoc(self) -> bool:
+    def left_assoc(self) -> bool:  # if op is left associative w/e that means
         if (self.char == '^'):
             return False
         return True

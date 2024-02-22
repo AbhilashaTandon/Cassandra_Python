@@ -2,13 +2,15 @@ from tokenizer import *
 from anytree import Node, RenderTree
 
 
-def is_left_paren(token):
+def is_left_paren(token):  # check if op is left paren
+    # this function is just to make shunting yard more concise
     if (not isinstance(token, Operator)):
         return False
     return token.char == '('
 
 
 def not_left_paren_at_top(op_stack):
+    # this function is just to make shunting yard more concise
     if (len(op_stack) == 0):
         return True
     top_of_stack = op_stack[-1]
@@ -18,9 +20,10 @@ def not_left_paren_at_top(op_stack):
 
 
 def shunting_yard(token_list):
-
+    # implements shunting yard algorithm
+    # https://en.wikipedia.org/wiki/Shunting_yard_algorithm
     if (len(token_list) < 2):
-        return token_list
+        return token_list  # single token or none
     out_queue = []
     op_stack = []
     for x in token_list:
@@ -61,22 +64,21 @@ def shunting_yard(token_list):
     return out_queue
 
 
-def make_tree(node_list):
+def make_tree(node_list):  # converts postfix list into tree
     root = None
     tree_stack = []
 
     for x in node_list:
-        if (x is None):
-            continue
-        args = x.num_args()
+        args = x.num_args()  # num child arguments of node, 2 for op, 1 for func
         children = []
-        for arg in range(args):
+        for arg in range(args):  # children are nodes at end of stack
             child = tree_stack.pop()
             children.append(child)
         new_node = Node(name=x, children=children)
-        if (len(tree_stack) == 0):
+        if (len(tree_stack) == 0):  # update root,
             root = new_node
         tree_stack.append(new_node)
     if (root is not None):
         for pre, _, node in RenderTree(root):
             print("%s%s" % (pre, node.name))
+    return root
