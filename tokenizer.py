@@ -84,7 +84,7 @@ class Constant(Token):
         return "Constant(%s)" % self.char
 
     def num_args(self) -> int:
-        return 1
+        return 0
 
 
 def token_split(expr: str):

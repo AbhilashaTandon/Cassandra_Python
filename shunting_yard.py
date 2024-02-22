@@ -18,6 +18,9 @@ def not_left_paren_at_top(op_stack):
 
 
 def shunting_yard(token_list):
+
+    if (len(token_list) < 2):
+        return token_list
     out_queue = []
     op_stack = []
     for x in token_list:
@@ -35,10 +38,11 @@ def shunting_yard(token_list):
                 op_stack.append(x)
             elif (x.char == ')'):
                 while not_left_paren_at_top(op_stack):
-                    if (len(op_stack) != 0):
+                    if (len(op_stack) == 0):
                         raise SyntaxError("Misplaced Parentheses")
                     out_queue.append(op_stack.pop())
-                assert (not not_left_paren_at_top(op_stack))
+                if (not_left_paren_at_top(op_stack)):
+                    raise SyntaxError("Misplaced Parentheses")
                 op_stack.pop()
                 if (len(op_stack) > 0 and isinstance(op_stack[-1], Function)):
                     out_queue.append(op_stack.pop())
@@ -58,18 +62,21 @@ def shunting_yard(token_list):
 
 
 def make_tree(node_list):
+    root = None
     tree_stack = []
 
     for x in node_list:
-        print(tree_stack)
+        if (x is None):
+            continue
+        args = x.num_args()
+        children = []
+        for arg in range(args):
+            child = tree_stack.pop()
+            children.append(child)
+        new_node = Node(name=x, children=children)
         if (len(tree_stack) == 0):
-            tree_stack.append(Node(x))
-        else:
-            while len(tree_stack) > 0:
-                last_node = tree_stack[-1]
-                num_args = last_node.name.num_args()
-                num_children = len(last_node.children)
-                if (num_children < num_args):
-                    tree_stack.append(Node(x, parent=last_node))
-                else:
-                    tree_stack.pop()  # remove finished nodes from list
+            root = new_node
+        tree_stack.append(new_node)
+    if (root is not None):
+        for pre, _, node in RenderTree(root):
+            print("%s%s" % (pre, node.name))

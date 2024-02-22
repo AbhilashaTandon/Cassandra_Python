@@ -6,7 +6,6 @@ def parse(expr):
     tokens = tokenizer.token_split(expr)
 
     tree = shunting_yard.shunting_yard(tokens)
-    print(tree)
     shunting_yard.make_tree(tree)
 
 
