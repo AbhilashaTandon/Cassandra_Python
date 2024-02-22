@@ -13,7 +13,7 @@ def is_float(element: any) -> bool:
 
 
 fun_regex = re.compile(r"[a-z][a-z0-9_]+")
-op_regex = re.compile(r"([+\-*/^\(\),]|log)")
+op_regex = re.compile(r"([+\-*/^\(\),])")
 const_regex = re.compile(r"pi|tau|phi|e")
 lit_regex = re.compile(r"[\d,]+\.?\d*|[\d,]*\.?\d+")
 

@@ -1,5 +1,6 @@
 from tokenizer import *
 from anytree import Node, RenderTree
+# https://anytree.readthedocs.io/en/latest/
 
 
 def is_left_paren(token):  # check if op is left paren
@@ -19,7 +20,7 @@ def not_left_paren_at_top(op_stack):
     return top_of_stack.char != '('
 
 
-def shunting_yard(token_list):
+def to_postfix(token_list):
     # implements shunting yard algorithm
     # https://en.wikipedia.org/wiki/Shunting_yard_algorithm
     if (len(token_list) < 2):
@@ -72,13 +73,11 @@ def make_tree(node_list):  # converts postfix list into tree
         args = x.num_args()  # num child arguments of node, 2 for op, 1 for func
         children = []
         for arg in range(args):  # children are nodes at end of stack
-            child = tree_stack.pop()
+            child = tree_stack.pop()  # pop from the end so children is reversed
             children.append(child)
-        new_node = Node(name=x, children=children)
+        # we reverse it back here
+        new_node = Node(name=x, children=children[::-1])
         if (len(tree_stack) == 0):  # update root,
             root = new_node
         tree_stack.append(new_node)
-    if (root is not None):
-        for pre, _, node in RenderTree(root):
-            print("%s%s" % (pre, node.name))
     return root
