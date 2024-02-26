@@ -1,14 +1,24 @@
 import lex_parse
+import syn_parse
 
-tests = [
-    "3 * 5 - 100 / sin(e / log(343 * (2 + 2^(1.1 - tan(30)))))",
-    """var x = 2
-        fun f(x, y) = x^2 + y
-        sim 3 - 3 * x + 5 * f(x, 2) - x
-        calc der f(x,y) x
-        calc grad f(x,y)"""
-]
+tests = ["(8 - 1 + 3) * 6 - ((3 + 7) * 2)",
+         """
+         var x = 2
+         fun f(x, y) = x^2 + y
+         comp f(x, 2) 3
+         calc grad f(x,y)
+         
+         simp x + 3 - 3 / 1
+         der x f(x, x)
+         """]
 
 for test in tests:
     print()
-    print(lex_parse.token_split(test))
+    tokens = lex_parse.lex_parse(test)
+    sym_tab = syn_parse.SymbolTable()
+    postfix = syn_parse.to_postfix(tokens)
+    expr = syn_parse.Expr(syn_parse.make_tree(postfix, sym_tab))
+    print(str(expr))
+    for x in syn_parse.syn_parse(tokens):
+        print(str(x))
+    print()
