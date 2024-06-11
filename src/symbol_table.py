@@ -31,12 +31,16 @@ class SymbolTable:
                 raise NameError("variable %s is not defined", node.name)
 
     def add_var(self, var_name: str, expr: Expr):
+        if(var_name in self.variables):
+            raise NameError("redefinition of variable %s", var_name)
         SymbolTable.check_for_uninitialized_symbols(
             expr, self.variables.keys(), self.functions.keys())
         self.variables[var_name] = Variable(var_name, expr)
 
     def add_fun(self, fun_name, args, expr):
         # functions have 2 attribs, their arguments and their output
+        if(fun_name in self.functions):
+            raise NameError("redefinition of variable %s", fun_name)
         initialized_vars = self.variables.keys().copy()
         for x in args:
             initialized_vars.append(x)

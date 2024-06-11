@@ -1,7 +1,7 @@
 from anytree import Node, RenderTree
 
 
-class Expr:
+class Expr: # a class for mathematical expressions
     root: Node
 
     def __init__(self, root: Node):

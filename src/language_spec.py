@@ -5,6 +5,9 @@ import re
 from collections import OrderedDict
 from expr import Expr
 
+#misc notes to add to documentation:
+#all variables are immutable
+
 # splits source code into tokens
 # name must start with lowercase letter, have only lowercase letters and underscore, and be followed by parens
 fun_regex = re.compile(r"[a-z][a-z0-9_]*\s*(?=\(.*\))")
@@ -15,13 +18,13 @@ symbol_regex = re.compile(r"[a-z][a-z0-9_]*")
 function_paren = "(?=\(.*\))"
 
 keywords = {  # reserved keywords in CASsandra
-    "var": "VARIABLE",
-    "fun": "FUNCTION",
-    "calc": "CALCULATE",
-    "sim": "SIMPLIFY",
-    "der": "DERIVATIVE",
-    "grad": "GRADIENT",
-    "int": "INTEGRAL"
+    "var": "VARIABLE", #for declaring a variable
+    "fun": "FUNCTION", #for declaring a function
+    "calc": "CALCULATE", #for calculating the value of an expression, uses variable values from symbol table
+    "sim": "SIMPLIFY", #simplifies expression, ignores values of variables and results of functions
+    "der": "DERIVATIVE", #acts on expressions, finds derivative wrt a single variable
+    "grad": "GRADIENT", #calculates gradient, returns list of derivatives wrt each variable in expr
+    "int": "INTEGRAL" #integrates, indefinite
 }
 
 reserved_functions = ["sqrt", "cbrt", "log2", "log10",
@@ -127,3 +130,13 @@ def is_value(token: Token):
     if (token.name in reserved_constants):
         return True
     return False
+
+PLUS = Token("+", "+")
+MINUS = Token("-", "-")
+MULT = Token("*", "*")
+DIV = Token("/", "/")
+EXP = Token("^", "^")
+EQ = Token("=", "=")
+LEFT_PAREN = Token("(", "(")
+RIGHT_PAREN = Token(")", ")")
+COMMA = Token(",", ",")
